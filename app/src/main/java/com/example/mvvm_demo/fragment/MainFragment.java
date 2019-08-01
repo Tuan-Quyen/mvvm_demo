@@ -96,12 +96,14 @@ public class MainFragment extends BaseFragment implements ChooseImageListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == Constant.OPEN_CAMERA)
-                CropImage.activity(image_uri).setGuidelines(CropImageView.Guidelines.ON).start(Objects.requireNonNull(getActivity()));
-            if (requestCode == Constant.OPEN_GALLERY)
-                CropImage.activity(data.getData()).setGuidelines(CropImageView.Guidelines.ON).start(Objects.requireNonNull(getActivity()));
-        }
+        if (requestCode == Constant.OPEN_CAMERA)
+            if (resultCode == RESULT_OK) {
+                CropImage.activity(image_uri).setGuidelines(CropImageView.Guidelines.ON).start(Objects.requireNonNull(getContext()),this);
+            }
+        if (requestCode == Constant.OPEN_GALLERY)
+            if (resultCode == RESULT_OK) {
+                CropImage.activity(data.getData()).setGuidelines(CropImageView.Guidelines.ON).start(Objects.requireNonNull(getContext()),this);
+            }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
