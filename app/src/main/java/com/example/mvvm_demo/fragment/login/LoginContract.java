@@ -1,4 +1,4 @@
-package com.example.mvvm_demo.fragment;
+package com.example.mvvm_demo.fragment.login;
 
 import com.example.mvvm_demo.base.MvpView;
 

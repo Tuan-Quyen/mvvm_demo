@@ -1,7 +1,7 @@
-package com.example.mvvm_demo.fragment;
+package com.example.mvvm_demo.fragment.login;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mvvm_demo.R;
+import com.example.mvvm_demo.activity.MainActivity;
 import com.example.mvvm_demo.base.BaseFragment;
 import com.example.mvvm_demo.other.AppUtils;
 import com.example.mvvm_demo.other.ValidateUtils;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +52,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
 
     @Override
     public void loginSuccess() {
-
+        hideLoading();
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+        Objects.requireNonNull(getActivity()).finish();
     }
 
     @Override

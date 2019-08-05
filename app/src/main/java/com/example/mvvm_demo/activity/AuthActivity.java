@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.example.mvvm_demo.R;
 import com.example.mvvm_demo.base.BaseActivity;
-import com.example.mvvm_demo.fragment.LoginFragment;
+import com.example.mvvm_demo.fragment.login.LoginFragment;
 
 public class AuthActivity extends BaseActivity {
     @Override

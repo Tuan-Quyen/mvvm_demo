@@ -1,16 +1,20 @@
-package com.example.mvvm_demo.fragment;
+package com.example.mvvm_demo.fragment.login;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.mvvm_demo.base.BasePresenter;
 import com.example.mvvm_demo.other.ApiKeyParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.socket.client.Socket;
 
 public class LoginPresenterImp extends BasePresenter<LoginContract.LoginView> implements LoginContract.LoginPresenter {
     private Socket mSocket;
-
     LoginPresenterImp(Socket mSocket) {
         this.mSocket = mSocket;
     }
@@ -24,20 +28,9 @@ public class LoginPresenterImp extends BasePresenter<LoginContract.LoginView> im
         new Handler().postDelayed(() -> {
             if (mSocket.connected()) {
                 mSocket.emit(ApiKeyParams.USER_LOGIN, userName);
-                mSocket.on(ApiKeyParams.EXIST_USER, args -> {
-                    boolean isExist = (Boolean) args[0];
-                    if (isExist) {
-                        getView().loginError("User name is existed");
-                    }
-                    getView().hideLoading();
-                });
-                /*mSocket.on(ApiKeyParams.LIST_USER, args -> {
-
-                    Log.d("data: ", args[0].toString());
-                });*/
-            } else {
-                getView().loginError("Connection has error!Trying to reconnect");
+                getView().loginSuccess();
             }
-        }, 2000);
+        },2000);
     }
+
 }

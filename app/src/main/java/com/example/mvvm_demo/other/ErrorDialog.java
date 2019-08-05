@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.interfaces.ConfirmListener;
+import com.example.mvvm_demo.interfaces.ConfirmListener;
 import com.example.mvvm_demo.R;
 
 import butterknife.BindView;
