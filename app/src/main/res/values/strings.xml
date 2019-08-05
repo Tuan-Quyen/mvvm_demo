@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Mvvm_Research</string>
+    <string name="user_name">UserName</string>
+    <string name="login">Login</string>
+    <string name="error_login">Error Login!</string>
+    <string name="connection_error">No Connection</string>
 </resources>

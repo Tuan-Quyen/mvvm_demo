@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.example.interfaces.ConfirmListener;
 import com.example.mvvm_demo.R;
 
 import butterknife.BindView;
@@ -20,11 +22,13 @@ public class ErrorDialog extends Dialog {
     TextView tvTitle;
     private String content;
     private String title;
+    private ConfirmListener listener;
 
-    public ErrorDialog(@NonNull Context context, String content, String title) {
+    public ErrorDialog(@NonNull Context context, String content, String title, @Nullable ConfirmListener listener) {
         super(context);
         this.content = content;
         this.title = title;
+        this.listener = listener;
     }
 
     @Override
@@ -42,6 +46,9 @@ public class ErrorDialog extends Dialog {
 
     @OnClick(R.id.dialogError_btnOk)
     public void onClick(){
+        if(listener != null){
+            listener.onConfirmListener();
+        }
         dismiss();
     }
 }
