@@ -1,7 +1,10 @@
 package com.example.mvvm_demo.fragment.login;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import com.example.mvvm_demo.R;
 import com.example.mvvm_demo.activity.MainActivity;
 import com.example.mvvm_demo.base.BaseFragment;
 import com.example.mvvm_demo.other.AppUtils;
+import com.example.mvvm_demo.other.Constant;
 import com.example.mvvm_demo.other.ValidateUtils;
 
 import java.util.Objects;
@@ -26,6 +30,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
     @BindView(R.id.fragLogin_etUser)
     EditText etUser;
     private LoginPresenterImp presenterImp;
+    private Handler mHandler;
 
     @Nullable
     @Override
@@ -34,7 +39,30 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
         ButterKnife.bind(this, view);
         presenterImp = new LoginPresenterImp(getSocket());
         presenterImp.onAttach(this);
+        initView();
         return view;
+    }
+
+    private void initView() {
+        handleMessage();
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void handleMessage(){
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case Constant.MESSAGE_THREAD_LOGIN_WHAT:
+                        AppUtils.showDialog(getContext(), getString(R.string.connection_error),
+                                msg.getData().getString(Constant.MESSAGE_THREAD_LOGIN),
+                                () -> presenterImp.connectUser(etUser.getText().toString()));
+                        mHandler.removeMessages(msg.what);
+                        break;
+                }
+            }
+        };
+        presenterImp.setmHandler(mHandler);
     }
 
     @OnClick(R.id.fragLogin_btnLogin)
@@ -48,6 +76,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
     public void onDestroy() {
         super.onDestroy();
         presenterImp.onDetach();
+        mHandler = null;
     }
 
     @Override
@@ -55,16 +84,6 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
         hideLoading();
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);
-        Objects.requireNonNull(getActivity()).finish();
-    }
-
-    @Override
-    public void loginError(String error) {
-        hideLoading();
-        if (!getSocket().connected()) {
-            AppUtils.showDialog(getContext(), getString(R.string.connection_error), error, () -> presenterImp.connectUser(etUser.getText().toString()));
-        } else {
-            AppUtils.showDialog(getContext(), getString(R.string.error_login), error, null);
-        }
+        getActivity().finish();
     }
 }

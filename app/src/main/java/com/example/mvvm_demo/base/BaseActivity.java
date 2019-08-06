@@ -8,34 +8,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.mvvm_demo.MyApplication;
 import com.example.mvvm_demo.other.ProgressDialog;
 
-import java.net.URISyntaxException;
-
-import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public abstract class BaseActivity extends AppCompatActivity implements MvpView {
-    private Socket mSocket;
-
-    {
-        try {
-            IO.Options opts = new IO.Options();
-            opts.reconnection = true;
-            opts.reconnectionDelay = 1000;
-            opts.reconnectionDelayMax = 3000;
-            opts.reconnectionAttempts = 3;
-            mSocket = IO.socket("https://pure-shore-49093.herokuapp.com",opts);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
     private ProgressDialog progressBar;
+    private Socket mSocket;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSocket = ((MyApplication) getApplicationContext()).getSocket();
     }
 
     @Override
@@ -73,17 +58,17 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
 
     @Override
     public void showLoading() {
-        if(progressBar == null){
+        if (progressBar == null) {
             progressBar = new ProgressDialog(this);
             progressBar.show();
-        }else{
+        } else {
             progressBar.show();
         }
     }
 
     @Override
     public void hideLoading() {
-        if(progressBar != null){
+        if (progressBar != null) {
             progressBar.dismiss();
         }
     }

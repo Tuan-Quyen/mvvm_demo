@@ -12,6 +12,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        replaceFragment(new HomeFragment(), true, R.id.actMain_content);
+        replaceFragment(new HomeFragment(), false, R.id.actMain_content);
     }
 }
