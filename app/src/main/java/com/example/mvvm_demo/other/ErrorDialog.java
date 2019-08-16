@@ -47,7 +47,7 @@ public class ErrorDialog extends Dialog {
     @OnClick(R.id.dialogError_btnOk)
     public void onClick(){
         if(listener != null){
-            listener.onConfirmListener();
+            listener.onConfirmListener(null);
         }
         dismiss();
     }

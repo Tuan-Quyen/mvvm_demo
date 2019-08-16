@@ -1,6 +1,7 @@
 package com.example.mvvm_demo.fragment.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,28 +31,33 @@ public class HomeFragment extends BaseFragment implements HomeContract.HomeView,
     private List<UserModel> _dataUser;
     private HomePresenterImp presenterImp;
     private HomeUserAdapter adapter;
+    private Handler mHandler;
+
+    public HomeFragment(Handler mHandler) {
+        this.mHandler = mHandler;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        Log.e("status :", String.valueOf(getSocket().connected()));
         presenterImp = new HomePresenterImp(getSocket());
+        presenterImp.setmHandler(mHandler);
         presenterImp.onAttach(this);
         initView();
         return view;
     }
 
     private void initView() {
+        //getUser
+        presenterImp.getListUser();
+
         _dataUser = new ArrayList<>();
         LinearLayoutManager linear = new LinearLayoutManager(getContext());
         adapter = new HomeUserAdapter(_dataUser, this);
         rvUser.setLayoutManager(linear);
         rvUser.setAdapter(adapter);
-
-        //getUser
-        presenterImp.getListUser();
     }
 
     @Override

@@ -1,12 +1,18 @@
 package com.example.mvvm_demo.fragment.login;
 
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 
 import com.example.mvvm_demo.base.BasePresenter;
+import com.example.mvvm_demo.model.UserModel;
 import com.example.mvvm_demo.other.ApiKeyParams;
-import com.example.mvvm_demo.other.Constant;
+import com.example.mvvm_demo.other.AppUtils;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 import io.socket.client.Socket;
 
@@ -25,21 +31,16 @@ public class LoginPresenterImp extends BasePresenter<LoginContract.LoginView> im
     @Override
     public void connectUser(String userName) {
         getView().showLoading();
-        if (!mSocket.connected()) {
-            mSocket.connect();
-        }
         new Handler().postDelayed(() -> {
             if (mSocket.connected()) {
                 mSocket.emit(ApiKeyParams.USER_LOGIN, userName);
+                mSocket.on(ApiKeyParams.LIST_USER, args -> {
+                    Log.d("data: ", args[0].toString());
+                });
                 getView().loginSuccess();
             } else {
                 getView().hideLoading();
-                Message message = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString(Constant.MESSAGE_THREAD_LOGIN, "No Connection!Trying to reconnect");
-                message.what = Constant.MESSAGE_THREAD_LOGIN_WHAT;
-                message.setData(bundle);
-                mHandler.sendMessage(message);
+                mHandler.sendMessage(AppUtils.configMessage());
             }
         }, 3000);
     }

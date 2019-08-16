@@ -26,9 +26,6 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpView 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mSocket.connected()) {
-            mSocket.disconnect();
-        }
     }
 
     public void addFragment(Fragment fragment, boolean addToBackStack, int resID) {

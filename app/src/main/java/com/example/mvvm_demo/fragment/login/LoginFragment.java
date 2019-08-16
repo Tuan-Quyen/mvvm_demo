@@ -1,10 +1,8 @@
 package com.example.mvvm_demo.fragment.login;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +14,15 @@ import androidx.annotation.Nullable;
 import com.example.mvvm_demo.R;
 import com.example.mvvm_demo.activity.MainActivity;
 import com.example.mvvm_demo.base.BaseFragment;
+import com.example.mvvm_demo.interfaces.ConfirmListener;
 import com.example.mvvm_demo.other.AppUtils;
-import com.example.mvvm_demo.other.Constant;
 import com.example.mvvm_demo.other.ValidateUtils;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginFragment extends BaseFragment implements LoginContract.LoginView {
+public class LoginFragment extends BaseFragment implements LoginContract.LoginView, ConfirmListener {
     @BindView(R.id.fragLogin_etUser)
     EditText etUser;
     private LoginPresenterImp presenterImp;
@@ -44,24 +40,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
     }
 
     private void initView() {
-        handleMessage();
-    }
-
-    @SuppressLint("HandlerLeak")
-    private void handleMessage(){
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what){
-                    case Constant.MESSAGE_THREAD_LOGIN_WHAT:
-                        AppUtils.showDialog(getContext(), getString(R.string.connection_error),
-                                msg.getData().getString(Constant.MESSAGE_THREAD_LOGIN),
-                                () -> presenterImp.connectUser(etUser.getText().toString()));
-                        mHandler.removeMessages(msg.what);
-                        break;
-                }
-            }
-        };
+        mHandler = AppUtils.handleMessage(this);
         presenterImp.setmHandler(mHandler);
     }
 
@@ -84,6 +63,14 @@ public class LoginFragment extends BaseFragment implements LoginContract.LoginVi
         hideLoading();
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);
-        getActivity().finish();
+    }
+
+    @Override
+    public void onConfirmListener(String msg) {
+        AppUtils.showDialog(getContext(), getString(R.string.connection_error),
+                msg, msg1 -> {
+                    getSocket().connect();
+                    presenterImp.connectUser(etUser.getText().toString());
+                });
     }
 }

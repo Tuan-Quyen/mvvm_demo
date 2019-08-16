@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 
     //socketIO
-    implementation ('io.socket:socket.io-client:1.0.0') {
+    implementation ('io.socket:socket.io-client:0.8.3') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
