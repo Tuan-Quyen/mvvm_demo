@@ -11,4 +11,5 @@
     <color name="colorDark">#000000</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorGrey">#A39D9D</color>
+    <color name="colorLightGrey">#CFCACA</color>
 </resources>
