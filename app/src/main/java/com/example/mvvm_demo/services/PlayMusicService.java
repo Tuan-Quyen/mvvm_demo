@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class PlayMusicService extends Service {
     MediaPlayer player;
-    boolean hasSong = false;
+    boolean hasSong = false, isPlaying;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,9 +60,7 @@ public class PlayMusicService extends Service {
                 if (player.isPlaying()) {
                     player.stop();
                     player.reset();
-                    player.release();
                     hasSong = false;
-                    stopSelf();
                 }
                 break;
             case Constant.NEXT_MUSIC:
@@ -77,12 +75,25 @@ public class PlayMusicService extends Service {
     }
 
     private void startOtherMusic(String url) {
+        isPlaying = player.isPlaying();
         player.stop();
         player.reset();
         try {
             player.setDataSource(url);
+            player.prepare();
+            hasSong = true;
+            if (isPlaying) {
+                player.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        player.release();
+        stopSelf();
     }
 }

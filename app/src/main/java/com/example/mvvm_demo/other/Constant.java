@@ -1,6 +1,11 @@
 package com.example.mvvm_demo.other;
 
+import com.example.mvvm_demo.models.AudioModel;
+
 public class Constant {
+    static boolean isPlaying = false;
+    static AudioModel audioModel;
+
     //key
     public final static String STATE_FLOATING_UI = "State_floating";
     public final static String STATE_MEDIA_MUSIC = "State_media_music";

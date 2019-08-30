@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Mvvm_Research</string>
+    <string name="music_player">Music Player</string>
 </resources>

@@ -11,7 +11,7 @@ public class AppUtils {
         errorDialog.show();
     }
 
-    public static WindowManager.LayoutParams setUpParams(WindowManager.LayoutParams layoutParams){
+    static WindowManager.LayoutParams setUpParams(WindowManager.LayoutParams layoutParams){
         layoutParams.windowAnimations = WindowManager.LayoutParams.ROTATION_ANIMATION_CHANGED;
         layoutParams.format = PixelFormat.TRANSLUCENT;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

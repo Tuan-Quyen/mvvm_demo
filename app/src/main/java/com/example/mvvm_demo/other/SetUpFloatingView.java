@@ -1,27 +1,26 @@
 package com.example.mvvm_demo.other;
 
 import android.annotation.SuppressLint;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.WindowManager;
 
 public class SetUpFloatingView {
-    public static WindowManager.LayoutParams setUpViewClose(Display display) {
+    public static WindowManager.LayoutParams setUpViewClose() {
         WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams();
-        mLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        mLayoutParams.gravity = Gravity.TOP;
-        mLayoutParams.y = display.getHeight() - 200;
+        mLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT; //view width
+        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT; //view height
+        mLayoutParams.gravity = Gravity.BOTTOM;    //view gravity
+        mLayoutParams.y = -100;    //view height position
         return AppUtils.setUpParams(mLayoutParams);
     }
 
     @SuppressLint("RtlHardcoded")
     public static WindowManager.LayoutParams setUpViewButton(){
         WindowManager.LayoutParams mLayoutParams = new WindowManager.LayoutParams();
-        mLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        mLayoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
-        mLayoutParams.y = 200;
+        mLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT; //view width
+        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT; //view height
+        mLayoutParams.gravity = Gravity.RIGHT | Gravity.TOP; //view right and top
+        mLayoutParams.y = 200; //view height position
         return AppUtils.setUpParams(mLayoutParams);
     }
 }

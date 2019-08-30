@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.mvvm_demo.R;
 import com.example.mvvm_demo.interfaces.PositionChangeListener;
 import com.example.mvvm_demo.interfaces.PositionClickListener;
+import com.example.mvvm_demo.models.AudioModel;
 import com.example.mvvm_demo.services.PlayMusicService;
 
 import java.util.List;
@@ -24,6 +26,8 @@ public class FloatingMusic extends View implements View.OnTouchListener {
     ImageView btnPlay;
     @BindView(R.id.viewMusic_ivPause)
     ImageView btnPause;
+    @BindView(R.id.viewMusic_tvTitleMusic)
+    TextView tvTitle;
 
     private float mStartX;
     private float mStartY;
@@ -33,7 +37,7 @@ public class FloatingMusic extends View implements View.OnTouchListener {
     private PositionChangeListener listener;
     private PositionClickListener clickListener;
     private View view;
-    private List<String> dataMusic;
+    private List<AudioModel> dataMusic;
     private int currentPosition;
     private Intent intent;
 
@@ -61,13 +65,23 @@ public class FloatingMusic extends View implements View.OnTouchListener {
         this.clickListener = clickListener;
     }
 
-    public void setDataMusic(List<String> dataMusic) {
+    public void setDataMusic(List<AudioModel> dataMusic) {
         this.dataMusic = dataMusic;
     }
 
     private void initView(Context context) {
         currentPosition = 0;
+        tvTitle.setSelected(true);
         intent = new Intent(context, PlayMusicService.class);
+        //check music isplaying
+        if (Constant.isPlaying) {
+            tvTitle.setText(getTitleSinger(Constant.audioModel));
+            btnPause.setVisibility(VISIBLE);
+            btnPlay.setVisibility(GONE);
+        } else {
+            btnPause.setVisibility(GONE);
+            btnPlay.setVisibility(VISIBLE);
+        }
     }
 
     @Override
@@ -85,7 +99,7 @@ public class FloatingMusic extends View implements View.OnTouchListener {
                 float deltaY = event.getRawY() - mStartY;
                 mLayoutParams.x = (int) (previousX - deltaX);
                 mLayoutParams.y = (int) (previousY + deltaY);
-                listener.onPositionChangeMusicListener(v, mLayoutParams);
+                listener.onPositionChangeMusicListener(view, mLayoutParams);
                 break;
         }
         return false;
@@ -101,20 +115,26 @@ public class FloatingMusic extends View implements View.OnTouchListener {
                 btnPause.setVisibility(VISIBLE);
                 btnPlay.setVisibility(GONE);
                 intent.putExtra(Constant.STATE_MEDIA_MUSIC, Constant.PLAY_MUSIC);
-                intent.putExtra(Constant.URL_SONG_MUSIC, dataMusic.get(currentPosition));
+                intent.putExtra(Constant.URL_SONG_MUSIC, dataMusic.get(currentPosition).getUrlMusic());
                 view.getContext().startService(intent);
+                tvTitle.setText(getTitleSinger(dataMusic.get(currentPosition)));
+                Constant.audioModel = dataMusic.get(currentPosition);
+                Constant.isPlaying = true;
                 break;
             case R.id.viewMusic_ivPause:
                 btnPause.setVisibility(GONE);
                 btnPlay.setVisibility(VISIBLE);
                 intent.putExtra(Constant.STATE_MEDIA_MUSIC, Constant.PAUSE_MUSIC);
                 view.getContext().startService(intent);
+                Constant.isPlaying = false;
                 break;
             case R.id.viewMusic_ivStop:
                 btnPause.setVisibility(GONE);
                 btnPlay.setVisibility(VISIBLE);
                 intent.putExtra(Constant.STATE_MEDIA_MUSIC, Constant.STOP_MUSIC);
                 view.getContext().startService(intent);
+                Constant.isPlaying = false;
+                tvTitle.setText(view.getContext().getString(R.string.music_player));
                 break;
             case R.id.viewMusic_ivPrevious:
                 if (currentPosition == 0) {
@@ -123,8 +143,10 @@ public class FloatingMusic extends View implements View.OnTouchListener {
                     currentPosition--;
                 }
                 intent.putExtra(Constant.STATE_MEDIA_MUSIC, Constant.PREVIOUS_MUSIC);
-                intent.putExtra(Constant.URL_SONG_MUSIC, dataMusic.get(currentPosition));
+                intent.putExtra(Constant.URL_SONG_MUSIC, dataMusic.get(currentPosition).getUrlMusic());
                 view.getContext().startService(intent);
+                tvTitle.setText(getTitleSinger(dataMusic.get(currentPosition)));
+                Constant.audioModel = dataMusic.get(currentPosition);
                 break;
             case R.id.viewMusic_ivNext:
                 if (currentPosition == dataMusic.size() - 1) {
@@ -133,9 +155,15 @@ public class FloatingMusic extends View implements View.OnTouchListener {
                     currentPosition++;
                 }
                 intent.putExtra(Constant.STATE_MEDIA_MUSIC, Constant.NEXT_MUSIC);
-                intent.putExtra(Constant.URL_SONG_MUSIC, dataMusic.get(currentPosition));
+                intent.putExtra(Constant.URL_SONG_MUSIC, dataMusic.get(currentPosition).getUrlMusic());
                 view.getContext().startService(intent);
+                tvTitle.setText(getTitleSinger(dataMusic.get(currentPosition)));
+                Constant.audioModel = dataMusic.get(currentPosition);
                 break;
         }
+    }
+
+    private String getTitleSinger(AudioModel audioModel) {
+        return audioModel.getTitleMusic() + " - " + audioModel.getSinger();
     }
 }
